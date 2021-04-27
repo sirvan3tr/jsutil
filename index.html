@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <title>Daily Writer</title>
+      <meta name="application-name" content="Daily Writer">
+    <style>
+		.box,
+    #box {
+        width:200px;
+        height:75px;
+        border: 2px solid brown;
+        position: absolute;
+    }
+    </style>
+   </head>
+   <body>
+ <button onclick="clickHandler()">Click me</button>
+		<div id="app"></div>
+    <div id="box"></div>
+
+<script>
+/* Helper functions
+ * Author: Sirvan Almasi at Imperial College London
+ */
+// Find an element by Id
+function find(id) {
+    return document.getElementById(id);}
+
+// Shortened version of addEventListener
+function listen(el, event, func) {
+	return el.addEventListener(event, func);}
+
+// CreateElement shortened
+function ce(el, attrs={}, content=null, child=null) {
+	const µ = document.createElement(el);
+	if (content) {
+		if (content[0].isAtom) {
+			µ.textContent = content[0].getValue(content[1]);	
+			contentListener(µ, content[0], content[1]);}
+    else { µ.textContent = content;}}
+	if (child) µ.appendChild(child);
+  for (const [key, value] of Object.entries(attrs)) {
+		µ.setAttribute(key, value);}
+	return µ;}
+
+function contentListener(obj, atom, newVal) {
+	atom.listeners.push(obj);
+	listen(obj, atom.evName, (e) => {
+		obj.textContent = atom.getValue(newVal);});}
+
+// createElement but for a div
+function div(attrs={}, content=null, child=null) {
+	return ce("div", attrs, content, child);}
+
+class Atom {
+	constructor(value) {
+		this.state = value;
+		this.listeners = [];
+		this.eventName = "cat";
+		this.ev = new CustomEvent(this.eventName, {
+		  detail: { hazcheeseburger: true }});}
+	static name = "Atom";
+	get isAtom() {
+		return true;}
+	get event() {
+		return this.event;}
+	get evName() {
+		return this.eventName;}
+	getValue(obj) {
+		return this.state[obj];}
+	get val() {
+		return this.state;}	
+	set(obj, newVal) {
+		this.state[obj] = newVal;
+		this.listeners.forEach(el => el.dispatchEvent(this.ev));}}
+/*
+ * element.getBoundingClientRect();
+ * console.log(rect.top, rect.right, rect.bottom, rect.left);
+ */
+
+const box = find("box");
+const app = find("app");
+
+
+// State variable
+let state = new Atom({val: 1});
+// Handler
+const clickHandler = () => { state.set("val", state.getValue("val")+1);}
+// Dom element creation
+app.appendChild(div({"class": "test"}, [state, "val"]));
+
+var _ = undefined;
+var ƒ = ce;
+var jsonObj = [{name: "table",
+         child: [{name: "tr",
+                 child: [{name: "td",
+                         content: "Another table"},
+                         {name: "td",
+                                 content: "Andlfjaslfj"}]}]}];
+
+function json2HTML(obj) {
+  var f = null;
+  obj.forEach(function(i, e) {
+    if (i.child) {
+        f = ƒ(i.name, _, _, json2HTML(i.child));   
+    } else {
+        f = ƒ(i.name, _, i.content);
+    }
+
+  });
+  return f;
+}
+
+app.appendChild(json2HTML(jsonObj));
+
+var x = ƒ("table", _, _,
+            ƒ("tr", _, _,
+                ƒ("td", _, "Hello")));
+
+app.appendChild(x);
+
+
+listen(document, "keydown", (event) => {
+	var rect = box.getBoundingClientRect();
+	switch(event.key) {
+	  case "l":
+			box.style.left = rect.left + 20 + "px";
+	    break;
+	  case "h":
+			box.style.left = rect.left - 20 + "px";
+	    break;
+		case "j":
+			box.style.top = rect.top + 20 + "px";
+			break;
+		case "k":
+			box.style.top = rect.top - 20 + "px";
+			break;
+		case "m":
+			app.appendChild(div({"class": "box"}));
+			break;
+	  default:
+			console.log(event.key);}});
+
+</script>
+   </body>
+</html>
+
