@@ -1,97 +1,131 @@
 <!DOCTYPE html>
 <html>
-   <head>
-      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-      <title>Daily Writer</title>
-      <meta name="application-name" content="Daily Writer">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>JavaScript Utility</title>
+    <meta name="application-name" content="JavaScript Utility">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
     <style>
 		.box,
     #box {
         width:200px;
         height:75px;
         border: 2px solid brown;
-        position: absolute;
-    }
+        background: #eee;
+        position: absolute;}
+    .box:hover {
+        transform: rotateY(30deg) rotateX(45deg) !important;}
+
+		.hover {
+			/*transform: rotateY(30deg) rotateX(45deg);*/
+			position: relative;
+		}
+		p, a, div, h1, h2, h3, li, ul {
+			border: 1px dotted #ccc;
+			left: auto;
+		}
+		*:hover {
+outline: 1px solid blue;
+//transform: rotateY(30deg) rotateX(45deg);
+}
     </style>
-   </head>
-   <body>
- <button onclick="clickHandler()">Click me</button>
+  </head>
+  <body>
+    <button onclick="clickHandler()">Click me</button>
 		<div id="app"></div>
-    <div id="box"></div>
+    <div id="box" class="box"></div>
+<div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+      <div class="col">
+        <div class="card mb-4 rounded-3 shadow-sm">
+          <div class="card-header py-3">
+            <h4 class="my-0 fw-normal">Free</h4>
+          </div>
+          <div class="card-body">
+            <h1 class="card-title pricing-card-title">$0<small class="text-muted fw-light">/mo</small></h1>
+            <ul class="list-unstyled mt-3 mb-4">
+              <li>10 users included</li>
+              <li>2 GB of storage</li>
+              <li>Email support</li>
+              <li>Help center access</li>
+            </ul>
+            <button type="button" class="w-100 btn btn-lg btn-outline-primary">Sign up for free</button>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card mb-4 rounded-3 shadow-sm">
+          <div class="card-header py-3">
+            <h4 class="my-0 fw-normal">Pro</h4>
+          </div>
+          <div class="card-body">
+            <h1 class="card-title pricing-card-title">$15<small class="text-muted fw-light">/mo</small></h1>
+            <ul class="list-unstyled mt-3 mb-4">
+              <li>20 users included</li>
+              <li>10 GB of storage</li>
+              <li>Priority email support</li>
+              <li>Help center access</li>
+            </ul>
+            <button type="button" class="w-100 btn btn-lg btn-primary">Get started</button>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card mb-4 rounded-3 shadow-sm border-primary">
+          <div class="card-header py-3 text-white bg-primary border-primary">
+            <h4 class="my-0 fw-normal">Enterprise</h4>
+          </div>
+          <div class="card-body">
+            <h1 class="card-title pricing-card-title">$29<small class="text-muted fw-light">/mo</small></h1>
+            <ul class="list-unstyled mt-3 mb-4">
+              <li>30 users included</li>
+              <li>15 GB of storage</li>
+              <li>Phone and email support</li>
+              <li>Help center access</li>
+            </ul>
+            <button type="button" class="w-100 btn btn-lg btn-primary">Contact us</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
+<div class="feature col-md-4">
+      <div class="feature-icon bg-primary bg-gradient">
+        <svg class="bi" width="1em" height="1em"><use xlink:href="#collection"></use></svg>
+      </div>
+      <h2>Featured title</h2>
+      <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
+      <a href="#" class="icon-link">
+        Call to action
+        <svg class="bi" width="1em" height="1em"><use xlink:href="#chevron-right"></use></svg>
+      </a>
+    </div>
+
+
+<div>Hello world -- <span> I am a span</span></div>
+
+
+
+<!-- Javascript -------------------------------------------------------------->
+
+    <script src="./jsutil.js"></script>
 <script>
-/* Helper functions
- * Author: Sirvan Almasi at Imperial College London
- */
-// Find an element by Id
-function find(id) {
-    return document.getElementById(id);}
-
-// Shortened version of addEventListener
-function listen(el, event, func) {
-	return el.addEventListener(event, func);}
-
-// CreateElement shortened
-function ce(el, attrs={}, content=null, child=null) {
-	const µ = document.createElement(el);
-	if (content) {
-		if (content[0].isAtom) {
-			µ.textContent = content[0].getValue(content[1]);	
-			contentListener(µ, content[0], content[1]);}
-    else { µ.textContent = content;}}
-	if (child) µ.appendChild(child);
-  for (const [key, value] of Object.entries(attrs)) {
-		µ.setAttribute(key, value);}
-	return µ;}
-
-function contentListener(obj, atom, newVal) {
-	atom.listeners.push(obj);
-	listen(obj, atom.evName, (e) => {
-		obj.textContent = atom.getValue(newVal);});}
-
-// createElement but for a div
-function div(attrs={}, content=null, child=null) {
-	return ce("div", attrs, content, child);}
-
-class Atom {
-	constructor(value) {
-		this.state = value;
-		this.listeners = [];
-		this.eventName = "cat";
-		this.ev = new CustomEvent(this.eventName, {
-		  detail: { hazcheeseburger: true }});}
-	static name = "Atom";
-	get isAtom() {
-		return true;}
-	get event() {
-		return this.event;}
-	get evName() {
-		return this.eventName;}
-	getValue(obj) {
-		return this.state[obj];}
-	get val() {
-		return this.state;}	
-	set(obj, newVal) {
-		this.state[obj] = newVal;
-		this.listeners.forEach(el => el.dispatchEvent(this.ev));}}
 /*
  * element.getBoundingClientRect();
  * console.log(rect.top, rect.right, rect.bottom, rect.left);
  */
-
 const box = find("box");
 const app = find("app");
 
-
 // State variable
 let state = new Atom({val: 1});
+
 // Handler
 const clickHandler = () => { state.set("val", state.getValue("val")+1);}
+
 // Dom element creation
 app.appendChild(div({"class": "test"}, [state, "val"]));
 
 var _ = undefined;
-var ƒ = ce;
 var jsonObj = [{name: "table",
          child: [{name: "tr",
                  child: [{name: "td",
@@ -120,6 +154,48 @@ var x = ƒ("table", _, _,
 
 app.appendChild(x);
 
+/****************************************************************************** 
+ * Mouse Example
+******************************************************************************/
+let mouseState = new Atom({x: 0, y: 0});
+app.appendChild(div(_, [mouseState, "x"]));
+app.appendChild(div(_, [mouseState, "y"]));
+
+document.addEventListener('mousemove', e => {
+	mouseState.set("x", e.clientX);
+	mouseState.set("y", e.clientY);
+});
+
+function addLeft(el, leftNum, recurs) {
+		if (recurs>4) {
+			return;
+		} else{ 
+		el.style.top = leftNum + "px";
+		addLeft(el, leftNum+10, recurs+1);	
+		var array = Array.from(el.children)
+		array.forEach(function(c) {
+		});
+		}
+}
+
+let divs = document.querySelectorAll("div");
+divs.forEach(function(e) {
+	//e.style.background = "rgb(247, 176, 148,"+(Math.floor(Math.random()*10))+")";
+	listen(e, "click", (event) => {
+		console.log("Click: ", event.target);
+		//event.target.classList.add("hover");	
+		//addLeft(event.target, 20, 1);
+		let tstring = "rotateY(-33deg) rotateX(-33deg) rotateZ(0deg)";
+		event.target.style.transform = tstring;
+		event.target.parentNode.style.transform = tstring;
+	});
+
+	listen(e, "mouseout", (event) => {
+  setTimeout(function() {
+		//event.target.classList.remove("hover");
+  }, 500);
+	});
+});
 
 listen(document, "keydown", (event) => {
 	var rect = box.getBoundingClientRect();
@@ -143,6 +219,7 @@ listen(document, "keydown", (event) => {
 			console.log(event.key);}});
 
 </script>
-   </body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+  </body>
 </html>
 
