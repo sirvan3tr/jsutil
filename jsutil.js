@@ -3,7 +3,6 @@
  * Reactive and quick Javascript
  * Author: Sirvan Almasi at Imperial College London
  * s.almasi@imperial.ac.uk
- * 
  *****************************************************************************/
 // Find an element by Id
 let find = id => document.getElementById(id);
@@ -11,8 +10,7 @@ let find = id => document.getElementById(id);
 // Shortened version of addEventListener
 let listen = (el, event, func) => el.addEventListener(event, func);
 
-
-// CreateElement shortened
+// createElement short version 
 let ce = (el, attrs={}, content=null, child=null) => {
 	const µ = document.createElement(el);
 	elContent(µ, content);
@@ -22,8 +20,8 @@ let ce = (el, attrs={}, content=null, child=null) => {
 	return µ;}
 
 /*
- * µ: element in consideration
- * ß: content
+ * µ: element that we want to place the content in
+ * ß: content of the element [atom, value]
  */
 let elContent = (µ, ß) => {
 	if (ß) {
@@ -32,6 +30,7 @@ let elContent = (µ, ß) => {
 			contentListener(µ, ß[0], ß[1]);}
     else { µ.textContent = ß;}}}
 
+/* Create a listener for our element */
 let contentListener = (obj, atom, newVal) => {
 	atom.listeners.push(obj);
 	listen(obj, atom.evName, (e) => {
