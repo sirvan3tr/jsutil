@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>JavaScript Utility</title>
+    <meta name="application-name" content="JavaScript Utility">
+<link href="https://unpkg.com/@primer/css@^16.0.0/dist/primer.css" rel="stylesheet" />
+    <style>
+		.box,
+    #box {
+        width:200px;
+        height:75px;
+        border: 2px solid brown;
+        background: #eee;
+        position: absolute;}
+    .box:hover {
+        transform: rotateY(30deg) rotateX(45deg) !important;}
+    </style>
+  </head>
+  <body>
+    <button class="btn" onclick="clickHandler()">Click me</button>
+		<div id="app"></div>
+    <div id="box" class="box"></div>
+<!-- Javascript -------------------------------------------------------------->
+    <script src="./jsutil.js"></script>
+<script>
+/*
+ * element.getBoundingClientRect();
+ * console.log(rect.top, rect.right, rect.bottom, rect.left);
+ */
+const box = find("box");
+const app = find("app");
+
+// State variable
+let state = new Atom({val: 1});
+
+// Handler
+const clickHandler = () => { state.set("val", state.getValue("val")+1);}
+
+// Dom element creation
+app.appendChild(div({"class": "test"}, [state, "val"]));
+
+/******************************************************************************
+ * Use a json object to create DOM elements
+******************************************************************************/
+var _ = undefined;
+var jsonObj = [{name: "table",
+         				child: [{name: "tr",
+                 				 child: [{name: "td",
+                          				content: "Another table"},
+                         				 {name: "td",
+                          				content: "Andlfjaslfj"}]}]}];
+
+function json2HTML(obj) {
+  var f = null;
+  obj.forEach(function(i, e) {
+    if (i.child) {
+        f = ƒ(i.name, _, _, json2HTML(i.child));   
+    } else {
+        f = ƒ(i.name, _, i.content);
+    }
+  });
+  return f;
+}
+
+app.appendChild(json2HTML(jsonObj));
+
+var x = ƒ("table", _, _,
+            ƒ("tr", _, _,
+                ƒ("td", _, "Hello")));
+
+app.appendChild(x);
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+  </body>
+</html>
+
