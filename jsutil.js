@@ -4,14 +4,17 @@
  * Author: Sirvan Almasi at Imperial College London
  * s.almasi@imperial.ac.uk
  *****************************************************************************/
+// TODO: Set multiple variable states at once
+//
+
 // Find an element by Id
-let find = id => document.getElementById(id);
+const find = id => document.getElementById(id);
 
 // Shortened version of addEventListener
-let listen = (el, event, func) => el.addEventListener(event, func);
+const listen = (el, event, func) => el.addEventListener(event, func);
 
 // createElement short version 
-let ce = (el, attrs={}, content=null, child=null) => {
+const ce = (el, attrs={}, content=null, child=null) => {
 	const µ = document.createElement(el);
 	elContent(µ, content);
 	if (child) µ.appendChild(child);
@@ -23,7 +26,7 @@ let ce = (el, attrs={}, content=null, child=null) => {
  * µ: element that we want to place the content in
  * ß: content of the element [atom, value]
  */
-let elContent = (µ, ß) => {
+const elContent = (µ, ß) => {
 	if (ß) {
 		if (ß[0].isAtom) {
 			µ.textContent = ß[0].getValue(ß[1]);	
@@ -31,19 +34,19 @@ let elContent = (µ, ß) => {
     else { µ.textContent = ß;}}}
 
 /* Create a listener for our element */
-let contentListener = (obj, atom, newVal) => {
-	atom.listeners.push(obj);
+const contentListener = (obj, atom, newVal) => {
+	atom.listeners.add(obj);
 	listen(obj, atom.evName, (e) => {
 		obj.textContent = atom.getValue(newVal);});}
 
 // createElement but for a div
-let div = (attrs={}, content=null, child=null) =>
+const div = (attrs={}, content=null, child=null) =>
 	ce("div", attrs, content, child);
 
 class Atom {
 	constructor(value, eventName=null) {
 		this.state = value;
-		this.listeners = [];
+		this.listeners = new Set();
 		this.eventName = eventName | Math.random().toString(36).substring(7);
 		this.ev = new CustomEvent(this.eventName, {
 		  detail: { hazcheeseburger: true }});}
@@ -67,7 +70,8 @@ class Atom {
 
 	set(obj, newVal) {
 		this.state[obj] = newVal;
-		this.listeners.forEach(el => el.dispatchEvent(this.ev));}}
+		for(let µ of this.listeners) { µ.dispatchEvent(this.ev)}}}
 
 // Keyword shortcuts
 const ƒ = ce;
+const δ = ce;
