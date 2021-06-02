@@ -27,7 +27,7 @@ const ce = (el, attrs={}, content=null, child=null) => {
  * ß: content of the element [atom, value]
  */
 const elContent = (µ, ß) => {
-  if (typeof(ß)=="object") {
+  if (ß != null) {
     if (ß[0].isAtom) {
       µ.textContent = ß[0].getValue(ß[1]);	
       contentListener(µ, ß[0], ß[1]);}
